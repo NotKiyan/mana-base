@@ -17,6 +17,7 @@ const Login: React.FC = () => {
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('userRole', res.data.role);
             localStorage.setItem('username', res.data.username);
+            localStorage.setItem('displayName', res.data.displayName || '');
 
             if (res.data.role === 'admin') {
                 navigate('/admin');

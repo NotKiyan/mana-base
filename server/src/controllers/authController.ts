@@ -36,6 +36,7 @@ export const signup = async (req: Request, res: Response) => {
             res.status(201).json({
                 _id: user._id,
                 username: user.username,
+                displayName: user.displayName,
                 email: user.email,
                 role: user.role,
                 token: generateToken(user._id.toString(), user.role),
@@ -60,12 +61,50 @@ export const login = async (req: Request, res: Response) => {
             res.json({
                 _id: user._id,
                 username: user.username,
+                displayName: user.displayName,
                 email: user.email,
                 role: user.role,
                 token: generateToken(user._id.toString(), user.role),
             });
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
+        }
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+export const updateProfile = async (req: any, res: Response) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (user) {
+            user.displayName = req.body.displayName || user.displayName;
+
+            if (req.body.username && req.body.username !== user.username) {
+                const userExists = await User.findOne({ username: req.body.username });
+                if (userExists) {
+                    res.status(400).json({ message: 'Username already taken' });
+                    return;
+                }
+                user.username = req.body.username;
+            }
+
+            const updatedUser = await user.save();
+
+            res.json({
+                _id: updatedUser._id,
+                username: updatedUser.username,
+                displayName: updatedUser.displayName,
+                email: updatedUser.email,
+                role: updatedUser.role,
+                token: generateToken(updatedUser._id.toString(), updatedUser.role),
+            });
+        } else {
+            res.status(404).json({ message: 'User not found' });
         }
     } catch (error: any) {
         res.status(500).json({ message: error.message });
