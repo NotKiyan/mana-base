@@ -12,7 +12,7 @@ const generateToken = (id: string, role: string) => {
 // @desc    Register a new user
 // @route   POST /api/auth/signup
 export const signup = async (req: Request, res: Response) => {
-    const { username, email, password, role } = req.body;
+    const { username, email, password } = req.body;
 
     try {
         const userExists = await User.findOne({ $or: [{ email }, { username }] });
@@ -29,7 +29,7 @@ export const signup = async (req: Request, res: Response) => {
             username,
             email,
             password: hashedPassword,
-            role: role || 'user',
+            role: 'user',
         });
 
         if (user) {

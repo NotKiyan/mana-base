@@ -18,9 +18,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Security Check
+if (!process.env.JWT_SECRET) {
+    console.error('CRITICAL ERROR: JWT_SECRET is not defined in .env');
+    process.exit(1);
+}
 
 // Routes
 app.use('/api/auth', authRoutes);
