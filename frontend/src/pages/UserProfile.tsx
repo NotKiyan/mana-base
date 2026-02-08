@@ -13,16 +13,31 @@ const UserProfile: React.FC = () => {
     const [loading, setLoading] = useState(false);
 
     React.useEffect(() => {
-        const role = localStorage.getItem('userRole');
-        const storedUsername = localStorage.getItem('username');
-        const storedDisplayName = localStorage.getItem('displayName');
-        setUserRole(role);
-        if (storedUsername) {
-            setUsername(storedUsername);
-        }
-        if (storedDisplayName) {
-            setDisplayName(storedDisplayName);
-        }
+        const fetchProfile = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return;
+
+                const res = await axios.get('http://localhost:3000/api/auth/profile', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (res.data) {
+                    setUsername(res.data.username);
+                    setDisplayName(res.data.displayName || '');
+                    setUserRole(res.data.role);
+
+                    // Update localStorage to keep it in sync
+                    localStorage.setItem('username', res.data.username);
+                    localStorage.setItem('displayName', res.data.displayName || '');
+                    localStorage.setItem('userRole', res.data.role);
+                }
+            } catch (error) {
+                console.error('Failed to fetch profile:', error);
+            }
+        };
+
+        fetchProfile();
     }, []);
 
     const handleUpdateProfile = async () => {

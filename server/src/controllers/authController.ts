@@ -110,3 +110,27 @@ export const updateProfile = async (req: any, res: Response) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// @desc    Get user profile
+// @route   GET /api/auth/profile
+// @access  Private
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getProfile = async (req: any, res: Response) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (user) {
+            res.json({
+                _id: user._id,
+                username: user.username,
+                displayName: user.displayName,
+                email: user.email,
+                role: user.role,
+            });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};
