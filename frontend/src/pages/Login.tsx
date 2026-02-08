@@ -13,9 +13,10 @@ const Login: React.FC = () => {
         try {
             const res = await axios.post('http://localhost:3000/api/auth/login', { email, password });
             console.log('Login successful:', res.data);
-            // Store token and role in localStorage
+            // Store token, role, and username in localStorage
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('userRole', res.data.role);
+            localStorage.setItem('username', res.data.username);
 
             if (res.data.role === 'admin') {
                 navigate('/admin');

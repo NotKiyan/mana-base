@@ -7,15 +7,21 @@ const UserProfile: React.FC = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState<'profile' | 'decks'>('profile');
     const [userRole, setUserRole] = useState<string | null>(null);
+    const [username, setUsername] = useState<string>('Planeswalker');
 
     React.useEffect(() => {
         const role = localStorage.getItem('userRole');
+        const storedUsername = localStorage.getItem('username');
         setUserRole(role);
+        if (storedUsername) {
+            setUsername(storedUsername);
+        }
     }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userRole');
+        localStorage.removeItem('username');
         navigate('/');
         window.location.reload();
     };
@@ -55,8 +61,8 @@ const UserProfile: React.FC = () => {
                 <aside className="w-64 border-r border-light-primary/10 dark:border-white/5 bg-white dark:bg-[#08080A] hidden lg:block fixed h-[calc(100vh-64px)] overflow-y-auto">
                     <div className="p-8">
                         <div className="flex flex-col gap-1 mb-12">
-                            <h2 className="font-display font-bold text-light-primary dark:text-[#D4AF37] text-xl tracking-[0.1em] uppercase">@NOTK</h2>
-                            <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Archmage Tier</span>
+                            <h2 className="font-display font-bold text-light-primary dark:text-[#D4AF37] text-xl tracking-[0.1em] uppercase">@{username}</h2>
+                            <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Planeswalker</span>
                         </div>
 
                         <div className="space-y-8">
@@ -139,9 +145,9 @@ const UserProfile: React.FC = () => {
                                         <label className="text-sm font-bold text-light-text dark:text-gray-300">Mana Nexus Username</label>
                                         <div className="relative">
                                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]">@</span>
-                                            <input className="w-full bg-white dark:bg-[#0F0F12] border border-light-primary/20 dark:border-white/10 rounded-md pl-8 pr-4 py-3 focus:outline-none focus:border-light-primary dark:focus:border-[#D4AF37] focus:ring-1 focus:ring-light-primary dark:focus:ring-[#D4AF37] transition-all text-light-text dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600" value="Archmage_Notk" readOnly type="text" />
+                                            <input className="w-full bg-white dark:bg-[#0F0F12] border border-light-primary/20 dark:border-white/10 rounded-md pl-8 pr-4 py-3 focus:outline-none focus:border-light-primary dark:focus:border-[#D4AF37] focus:ring-1 focus:ring-light-primary dark:focus:ring-[#D4AF37] transition-all text-light-text dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600" value={`Planeswalker_${username}`} readOnly type="text" />
                                         </div>
-                                        <p className="text-xs text-gray-600 italic">Your profile will be reachable at <span className="text-[#D4AF37]">https://mananexus.com/@Archmage_Notk</span></p>
+                                        <p className="text-xs text-gray-600 italic">Your profile will be reachable at <span className="text-[#D4AF37]">https://mananexus.com/@Planeswalker_{username}</span></p>
                                     </div>
 
                                     <div className="pt-8 flex justify-end">
@@ -158,7 +164,7 @@ const UserProfile: React.FC = () => {
                                     <div>
                                         <div className="flex items-center gap-3">
                                             <span className="material-symbols-outlined text-[#D4AF37] text-3xl">style</span>
-                                            <h1 className="font-display text-4xl text-[#D4AF37]">Notk's Decks</h1>
+                                            <h1 className="font-display text-4xl text-[#D4AF37]">{username}'s Decks</h1>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4">
