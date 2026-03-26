@@ -31,8 +31,17 @@ Thumbs.db
 
 # Large Data Sets
 imports/
-*.json
 *.zip
 *.docx
 
-.md
+# Ignore JSON data files but keep package files
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!*config*.json
+
+# Markdown files (except README and AGENTS)
+*.md
+!README.md
+!AGENTS.md
