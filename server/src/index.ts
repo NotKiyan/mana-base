@@ -22,9 +22,24 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Middleware - CORS configuration for development and production
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.FRONTEND_URL || 'https://mana-nexus.azurewebsites.net'
+];
+
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 app.use(express.json());
@@ -45,19 +60,22 @@ app.use('/api/graph', graphRoutes);
 app.use('/api/user', userRoutes);
 
 // Static Assets
-// Assuming 'server' is cwd, and 'public' is one level up from 'server' OR inside 'server'?
-// Structure: /home/charan/Repos/mana base/
-//   - public/
-//   - server/
-//     - src/
-// So public is ../../public from src/index.ts?
-// Let's resolve relative to the project root.
 const PROJECT_ROOT = path.join(__dirname, '../../');
 app.use('/assets', express.static(path.join(PROJECT_ROOT, 'public/assets')));
 app.use('/icons', express.static(path.join(PROJECT_ROOT, 'Icons')));
-// Also serve the Stitch frontend if needed? 
-// User said: "Configure the backend to serve the sample card images and mana icons as static assets"
-// Stitch frontend is in `frontend/`. Usually we serve the build, but for now let's just serve assets.
+
+// Serve frontend build in production
+const frontendBuildPath = path.join(PROJECT_ROOT, 'frontend/dist');
+app.use(express.static(frontendBuildPath));
+
+// Catch-all route to serve index.html for client-side routing
+app.get('*', (req, res) => {
+    // Don't serve index.html for API routes
+    if (req.path.startsWith('/api/')) {
+        return res.status(404).json({ message: 'API endpoint not found' });
+    }
+    res.sendFile(path.join(frontendBuildPath, 'index.html'));
+});
 
 // Database Connections
 const startServer = async () => {
