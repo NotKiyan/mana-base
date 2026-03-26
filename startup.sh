@@ -1,21 +1,10 @@
 #!/bin/bash
 
-echo "Starting Mana Nexus deployment..."
+echo "Starting Mana Nexus..."
 
-# Build frontend
-echo "Building frontend..."
-cd frontend
-npm install
-npm run build
-cd ..
+# Install dependencies
+cd /home/site/wwwroot/server
+npm install --production
 
-# Build backend
-echo "Building backend..."
-cd server
-npm install
-npm run build
-cd ..
-
-echo "Build complete. Starting server..."
-cd server
+echo "Starting server..."
 node dist/index.js
