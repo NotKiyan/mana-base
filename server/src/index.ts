@@ -81,20 +81,29 @@ app.get('/{*path}', (req, res) => {
 
 // Database Connections
 const startServer = async () => {
-    try {
-        // Connect MongoDB
-        await connectDB();
+    // Start listening FIRST (Azure requires this within 230 seconds)
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+        console.log(`Serving static assets from ${path.join(PROJECT_ROOT, 'public/assets')}`);
+    });
 
-        // Connect PostgreSQL
+    // Connect to databases in background (non-blocking)
+    try {
+        console.log('Connecting to MongoDB...');
+        await connectDB();
+        console.log('MongoDB Connected');
+    } catch (err) {
+        console.error('MongoDB connection failed:', err);
+        console.log('Server will continue running without MongoDB');
+    }
+
+    try {
+        console.log('Connecting to PostgreSQL...');
         await sequelize.authenticate();
         console.log('PostgreSQL Connected');
-
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
-            console.log(`Serving static assets from ${path.join(PROJECT_ROOT, 'public/assets')}`);
-        });
     } catch (err) {
-        console.error('Failed to start server:', err);
+        console.error('PostgreSQL connection failed:', err);
+        console.log('Server will continue running without PostgreSQL');
     }
 };
 
