@@ -1,10 +1,15 @@
 #!/bin/bash
 
 echo "Starting Mana Nexus..."
+cd /home/site/wwwroot
 
-# Install dependencies
-cd /home/site/wwwroot/server
-npm install --production
+# Check what was deployed
+echo "Contents of /home/site/wwwroot:"
+ls -la
+
+echo "Contents of /home/site/wwwroot/server:"
+ls -la server/ || echo "server/ not found"
 
 echo "Starting server..."
+cd server
 node dist/index.js
