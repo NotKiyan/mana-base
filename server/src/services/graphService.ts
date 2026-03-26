@@ -31,6 +31,8 @@ export const getCardGraphDetails = async (cardId: string) => {
         if (result.records.length === 0) return null;
 
         const record = result.records[0];
+        if (!record) return null;
+        
         const relationships = (record.get('relationships') || []).filter((r: any) => r && r.partner).map((r: any) => ({
             relationship: r.relationship,
             partner: {
@@ -39,11 +41,14 @@ export const getCardGraphDetails = async (cardId: string) => {
             }
         }));
 
+        const cardNode = record.get('c');
+        if (!cardNode) return null;
+
         return {
-            card: record.get('c').properties,
+            card: cardNode.properties,
             relationships,
-            sets: (record.get('sets') || []).map((s: any) => s.properties),
-            artists: (record.get('artists') || []).map((a: any) => a.properties)
+            sets: (record.get('sets') || []).map((s: any) => s?.properties || {}),
+            artists: (record.get('artists') || []).map((a: any) => a?.properties || {})
         };
     } finally {
         await session.close();

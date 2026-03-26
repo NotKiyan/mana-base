@@ -31,8 +31,10 @@ async function check() {
 
     // Try to update the first card with mana_cost
     console.log("UPDATING...");
-    deck.cards[0].mana_cost = "{1}{W}{U}";
-    deck.cards[0].cmc = 3;
+    if (deck.cards && deck.cards[0]) {
+        deck.cards[0].mana_cost = "{1}{W}{U}";
+        deck.cards[0].cmc = 3;
+    }
     deck.markModified('cards');
 
     await deck.save();
