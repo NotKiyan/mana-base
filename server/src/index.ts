@@ -1,4 +1,5 @@
-console.log('Starting server...');
+console.log('Starting server... (v2.1 - Persistence Fixed)');
+// Force restart
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -8,6 +9,10 @@ import connectDB from './config/mongo.js';
 import sequelize from './models/index.js';
 import authRoutes from './routes/authRoutes.js';
 import cardRoutes from './routes/cardRoutes.js';
+import setRoutes from './routes/setRoutes.js';
+import deckRoutes from './routes/deckRoutes.js';
+import graphRoutes from './routes/graphRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,6 +39,10 @@ if (!process.env.JWT_SECRET) {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
+app.use('/api/sets', setRoutes);
+app.use('/api/decks', deckRoutes);
+app.use('/api/graph', graphRoutes);
+app.use('/api/user', userRoutes);
 
 // Static Assets
 // Assuming 'server' is cwd, and 'public' is one level up from 'server' OR inside 'server'?

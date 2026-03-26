@@ -34,3 +34,5 @@ imports/
 *.json
 *.zip
 *.docx
+
+.md

@@ -17,17 +17,15 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            // Get token from header
             token = req.headers.authorization.split(' ')[1];
 
-            // Verify token
             const secret = process.env.JWT_SECRET;
             if (!secret) {
                 throw new Error('JWT_SECRET is not defined');
             }
+
             const decoded = jwt.verify(token as string, secret) as unknown as DecodedToken;
 
-            // Get user from the token
             req.user = await User.findById(decoded.id).select('-password');
 
             if (!req.user) {

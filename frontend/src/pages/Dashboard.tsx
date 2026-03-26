@@ -6,11 +6,12 @@ interface CardData {
     edition_id: string;
     image_url_normal: string;
     Card: {
+        card_id: string;
         name: string;
     }
 }
 
-import ThemeToggle from '../components/ThemeToggle';
+import Navbar from '../components/Navbar';
 
 const Dashboard: React.FC = () => {
     const [cards, setCards] = useState<CardData[]>([]);
@@ -59,52 +60,7 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Header */}
-            <header className="fixed top-0 w-full z-50 transition-all duration-300 border-b border-light-primary/20 dark:border-primary/20 bg-light-bg/80 dark:bg-black/40 backdrop-blur-xl">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-20">
-                        <div className="flex items-center gap-3 cursor-pointer group">
-                            <div className="size-10 text-light-primary dark:text-primary flex items-center justify-center border border-light-primary/40 dark:border-primary/40 rounded-full group-hover:bg-light-primary/10 dark:group-hover:bg-primary/10 transition-all">
-                                <span className="material-symbols-outlined text-[28px]">playing_cards</span>
-                            </div>
-                            <span className="text-2xl font-display font-bold tracking-[0.2em] text-light-text dark:text-primary uppercase">Mana Nexus</span>
-                        </div>
-                        <nav className="hidden md:flex items-center gap-8">
-                            <ThemeToggle />
-                            <Link to="/advanced" className="text-sm font-display tracking-widest text-light-primary dark:text-gray-300 hover:text-light-secondary dark:hover:text-primary transition-colors uppercase">Advanced</Link>
-                            {localStorage.getItem('userRole') === 'admin' && (
-                                <Link to="/admin" className="text-sm font-display tracking-widest text-light-primary dark:text-primary hover:text-light-secondary dark:hover:brightness-125 transition-colors uppercase font-bold">Admin</Link>
-                            )}
-                            <a href="#" className="text-sm font-display tracking-widest text-light-primary dark:text-gray-300 hover:text-light-secondary dark:hover:text-primary transition-colors uppercase">Sets</a>
-                            <Link to="/deck/new" className="text-sm font-display tracking-widest text-light-primary dark:text-gray-300 hover:text-light-secondary dark:hover:text-primary transition-colors uppercase">Deckbuilder</Link>
-                        </nav>
-                        <div className="hidden md:flex items-center gap-6">
-                            {localStorage.getItem('token') ? (
-                                <div className="flex items-center gap-4">
-                                    <button onClick={() => { localStorage.removeItem('token'); window.location.reload(); }} className="text-xs font-display tracking-widest text-light-text dark:text-gray-400 hover:text-light-secondary dark:hover:text-white transition-colors uppercase">
-                                        Log Out
-                                    </button>
-                                    <Link to="/profile">
-                                        <div className="size-10 rounded-full bg-light-primary/10 dark:bg-primary/20 border border-light-primary/50 dark:border-primary/50 flex items-center justify-center text-light-primary dark:text-primary">
-                                            <span className="material-symbols-outlined">person</span>
-                                        </div>
-                                    </Link>
-                                </div>
-                            ) : (
-                                <>
-                                    <Link to="/login" className="text-xs font-display tracking-widest text-light-text dark:text-gray-400 hover:text-light-secondary dark:hover:text-white transition-colors uppercase">
-                                        Log In
-                                    </Link>
-                                    <Link to="/signup">
-                                        <button className="border border-transparent bg-gradient-to-r from-light-primary to-light-secondary dark:from-primary dark:to-[#FFD700] bg-clip-text text-transparent border-light-primary/20 dark:border-primary/50 text-xs font-display tracking-[0.2em] px-6 py-2.5 uppercase transition-all hover:brightness-125 hover:scale-105">
-                                            Sign Up
-                                        </button>
-                                    </Link>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <Navbar />
 
             {/* Main Content */}
             <main className="flex-grow flex flex-col items-center justify-center relative pt-32 pb-24 px-4">
@@ -122,8 +78,13 @@ const Dashboard: React.FC = () => {
                     <div className="w-full max-w-3xl space-y-8">
                         <div className="bg-white/40 dark:bg-[rgba(15,20,40,0.4)] backdrop-blur-[20px] backdrop-saturate-[180%] border border-light-primary/20 dark:border-[rgba(212,175,55,0.2)] shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] p-1 rounded-2xl">
                             <div className="relative flex items-center w-full bg-white/60 dark:bg-black/40 rounded-xl overflow-hidden group">
-                                <div className="pl-6 flex items-center justify-center text-light-primary dark:text-primary/60">
-                                    <span className="material-symbols-outlined text-[32px]">auto_awesome</span>
+                                <div className="pl-6 flex items-center justify-center">
+                                    <img
+                                        src="/assets/MTG%20icons/icons8-magic-the-gathering-arena-96.png"
+                                        className="w-8 h-8 object-contain"
+                                        style={{ filter: 'var(--logo-filter)' }}
+                                        alt="Search Icon"
+                                    />
                                 </div>
                                 <input
                                     type="text"
@@ -167,30 +128,30 @@ const Dashboard: React.FC = () => {
                     {cards.length >= 5 && (
                         <>
                             {/* Card 1 */}
-                            <div className="transition-all duration-500 hover:translate-y-[-20px] w-40 sm:w-52 aspect-[2.5/3.5] rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden relative -mr-16 transform -rotate-12 translate-y-12 z-0 border border-white/10">
+                            <Link to={`/card/${cards[0].Card.card_id}`} className="transition-all duration-500 hover:translate-y-[-20px] w-40 sm:w-52 aspect-[2.5/3.5] rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden relative -mr-16 transform -rotate-12 translate-y-12 z-0 border border-white/10">
                                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${cards[0].image_url_normal}')` }}></div>
                                 <div className="absolute inset-0 bg-black/40 hover:bg-transparent transition-colors"></div>
-                            </div>
+                            </Link>
                             {/* Card 2 */}
-                            <div className="transition-all duration-500 hover:translate-y-[-30px] w-44 sm:w-56 aspect-[2.5/3.5] rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.6)] overflow-hidden relative -mr-16 transform -rotate-6 translate-y-6 z-10 border border-white/10">
+                            <Link to={`/card/${cards[1].Card.card_id}`} className="transition-all duration-500 hover:translate-y-[-30px] w-44 sm:w-56 aspect-[2.5/3.5] rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.6)] overflow-hidden relative -mr-16 transform -rotate-6 translate-y-6 z-10 border border-white/10">
                                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${cards[1].image_url_normal}')` }}></div>
                                 <div className="absolute inset-0 bg-black/30 hover:bg-transparent transition-colors"></div>
-                            </div>
+                            </Link>
                             {/* Card 3 (Center) */}
-                            <div className="transition-all duration-500 hover:translate-y-[-40px] w-52 sm:w-64 aspect-[2.5/3.5] rounded-xl shadow-[0_0_50px_rgba(212,175,55,0.3)] overflow-hidden relative z-30 border-2 border-primary/40 ring-4 ring-black/50 scale-110">
+                            <Link to={`/card/${cards[2].Card.card_id}`} className="transition-all duration-500 hover:translate-y-[-40px] w-52 sm:w-64 aspect-[2.5/3.5] rounded-xl shadow-[0_0_50px_rgba(212,175,55,0.3)] overflow-hidden relative z-30 border-2 border-primary/40 ring-4 ring-black/50 scale-110">
                                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${cards[2].image_url_normal}')` }}></div>
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-white/5 pointer-events-none"></div>
-                            </div>
+                            </Link>
                             {/* Card 4 */}
-                            <div className="transition-all duration-500 hover:translate-y-[-30px] w-44 sm:w-56 aspect-[2.5/3.5] rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.6)] overflow-hidden relative -ml-16 transform rotate-6 translate-y-6 z-10 border border-white/10">
+                            <Link to={`/card/${cards[3].Card.card_id}`} className="transition-all duration-500 hover:translate-y-[-30px] w-44 sm:w-56 aspect-[2.5/3.5] rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.6)] overflow-hidden relative -ml-16 transform rotate-6 translate-y-6 z-10 border border-white/10">
                                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${cards[3].image_url_normal}')` }}></div>
                                 <div className="absolute inset-0 bg-black/30 hover:bg-transparent transition-colors"></div>
-                            </div>
+                            </Link>
                             {/* Card 5 */}
-                            <div className="transition-all duration-500 hover:translate-y-[-20px] w-40 sm:w-52 aspect-[2.5/3.5] rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden relative -mr-16 transform rotate-12 translate-y-12 z-0 border border-white/10">
+                            <Link to={`/card/${cards[4].Card.card_id}`} className="transition-all duration-500 hover:translate-y-[-20px] w-40 sm:w-52 aspect-[2.5/3.5] rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden relative -mr-16 transform rotate-12 translate-y-12 z-0 border border-white/10">
                                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${cards[4].image_url_normal}')` }}></div>
                                 <div className="absolute inset-0 bg-black/40 hover:bg-transparent transition-colors"></div>
-                            </div>
+                            </Link>
                         </>
                     )}
                 </div>
@@ -201,8 +162,13 @@ const Dashboard: React.FC = () => {
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-xs">
                     <div className="space-y-6">
                         <div className="flex items-center gap-3 cursor-pointer group">
-                            <div className="size-8 text-primary flex items-center justify-center border border-primary/40 rounded-full group-hover:bg-primary/10 transition-all">
-                                <span className="material-symbols-outlined text-[20px]">playing_cards</span>
+                            <div className="size-8 flex items-center justify-center border border-primary/40 rounded-full group-hover:bg-primary/10 transition-all">
+                                <img
+                                    src="/assets/MTG%20icons/icons8-magic-the-gathering-arena-64.png"
+                                    className="w-5 h-5 object-contain"
+                                    style={{ filter: 'var(--logo-filter)' }}
+                                    alt="Footer Logo"
+                                />
                             </div>
                             <span className="text-lg font-display font-bold tracking-[0.2em] text-primary uppercase">Mana Nexus</span>
                         </div>
@@ -246,8 +212,8 @@ const Dashboard: React.FC = () => {
                 <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-white/5 text-center text-[10px] tracking-[0.1em] uppercase opacity-50">
                     <p>© 2023 Mana Nexus LLC. All rights reserved.</p>
                 </div>
-            </footer>
-        </div>
+            </footer >
+        </div >
     );
 };
 

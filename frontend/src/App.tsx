@@ -7,6 +7,9 @@ import SearchResults from './pages/SearchResults.tsx';
 import AdvancedSearch from './pages/AdvancedSearch.tsx';
 import DeckEditor from './pages/DeckEditor.tsx';
 import AdminDashboard from './pages/AdminDashboard.tsx';
+import SetsPage from './pages/SetsPage.tsx';
+import SetDetailPage from './pages/SetDetailPage.tsx';
+import CardDetailPage from './pages/CardDetailPage.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 
 import { ThemeProvider } from './context/ThemeContext';
@@ -25,6 +28,9 @@ function App() {
                     } />
                     <Route path="/search" element={<SearchResults />} />
                     <Route path="/advanced" element={<AdvancedSearch />} />
+                    <Route path="/sets" element={<SetsPage />} />
+                    <Route path="/sets/:code" element={<SetDetailPage />} />
+                    <Route path="/card/:id" element={<CardDetailPage />} />
                     <Route path="/deck/:id" element={<DeckEditor />} />
                     <Route path="/admin" element={
                         <ProtectedRoute adminOnly={true}>

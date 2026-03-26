@@ -10,7 +10,9 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 
 // Update the notkiyan user to have admin role
 mongoose.connect(process.env.MONGO_URI || '').then(async () => {
-    const result = await mongoose.connection.db.collection('MANAusers').updateOne(
+    const db = mongoose.connection.db;
+    if (!db) { console.error('DB not connected'); process.exit(1); }
+    const result = await db.collection('MANAusers').updateOne(
         { email: 'charanems@gmail.com' },
         { $set: { role: 'admin' } }
     );

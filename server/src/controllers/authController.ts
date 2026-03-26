@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
+import ActivityLog from '../models/activityLog.js';
 
 const generateToken = (id: string, role: string) => {
     return jwt.sign({ id, role }, process.env.JWT_SECRET || 'fallbacksecret', {
@@ -58,6 +59,13 @@ export const login = async (req: Request, res: Response) => {
         const user = await User.findOne({ email });
 
         if (user && (await bcrypt.compare(password, user.password))) {
+            // Log login activity (fire-and-forget)
+            ActivityLog.create({
+                userId: user._id,
+                type: 'login',
+                payload: { ip: req.ip, userAgent: req.headers['user-agent'] }
+            }).catch(() => { }); // silently swallow logging errors
+
             res.json({
                 _id: user._id,
                 username: user.username,
