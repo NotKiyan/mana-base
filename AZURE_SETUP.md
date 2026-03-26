@@ -22,8 +22,8 @@ Your Azure for Students subscription has CLI restrictions. All resources must be
 ### Authentication:
 - **Authentication method**: PostgreSQL authentication only
 - **Admin username**: manaadmin
-- **Password**: ManaDB2026!Secure
-- **Confirm password**: ManaDB2026!Secure
+- **Password**: (Use a strong password - at least 12 characters with uppercase, lowercase, numbers, and symbols)
+- **Confirm password**: (Same as above)
 
 ### Networking:
 - **Connectivity method**: Public access (all IP addresses) - 0.0.0.0 - 255.255.255.255
@@ -42,7 +42,7 @@ Your Azure for Students subscription has CLI restrictions. All resources must be
    - Port: 5432
    - Database: postgres (default)
    - Username: manaadmin
-   - Password: ManaDB2026!Secure
+   - Password: (The password you set during creation)
 
 ### Create the MTGupdated Database:
 1. In the PostgreSQL server page, click "Databases" in the left menu
