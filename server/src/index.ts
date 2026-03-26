@@ -69,10 +69,12 @@ const frontendBuildPath = path.join(PROJECT_ROOT, 'frontend/dist');
 app.use(express.static(frontendBuildPath));
 
 // Catch-all route to serve index.html for client-side routing
-app.get('*', (req, res) => {
+// Express 5 requires {*path} syntax for wildcards
+app.get('/{*path}', (req, res) => {
     // Don't serve index.html for API routes
     if (req.path.startsWith('/api/')) {
-        return res.status(404).json({ message: 'API endpoint not found' });
+        res.status(404).json({ message: 'API endpoint not found' });
+        return;
     }
     res.sendFile(path.join(frontendBuildPath, 'index.html'));
 });
