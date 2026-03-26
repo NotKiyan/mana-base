@@ -33,7 +33,7 @@ app.use(cors({
     origin: (origin, callback) => {
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
-        
+
         if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -81,11 +81,21 @@ app.get('/{*path}', (req, res) => {
 
 // Database Connections
 const startServer = async () => {
+    // In production (Azure), bind to 0.0.0.0. Locally, use default (localhost)
+    const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : undefined;
+    
     // Start listening FIRST (Azure requires this within 230 seconds)
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-        console.log(`Serving static assets from ${path.join(PROJECT_ROOT, 'public/assets')}`);
-    });
+    if (HOST) {
+        app.listen(Number(PORT), HOST, () => {
+            console.log(`Server running on ${HOST}:${PORT}`);
+            console.log(`Serving static assets from ${path.join(PROJECT_ROOT, 'public/assets')}`);
+        });
+    } else {
+        app.listen(Number(PORT), () => {
+            console.log(`Server running on port ${PORT}`);
+            console.log(`Serving static assets from ${path.join(PROJECT_ROOT, 'public/assets')}`);
+        });
+    }
 
     // Connect to databases in background (non-blocking)
     try {
